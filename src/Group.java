@@ -3,15 +3,17 @@ import java.util.*;
 public class Group {
     private int id;
     private String title;
-    private Group parent;
+    private int parentId;
     private List<Item> items;
     private List<Group> groups;
 
+    public static  List<Group> groupList = new ArrayList<>();
     public Group(int id, String title ) {
         this.id = id;
         this.title = title;
         this.items = new ArrayList<>();
         this.groups = new ArrayList<>();
+        parentId = -1;
     }
 
     public int getId() {
@@ -43,15 +45,16 @@ public class Group {
     }
 
     public void addGroups( Group group) {
+
         this.groups.add(group);
     }
 
-    public Group getParent() {
-        return parent;
+    public int getParent() {
+        return parentId;
     }
 
-    public void setParent(Group parent) {
-        this.parent = parent;
+    public void setParent(int parentId) {
+        this.parentId = parentId;
     }
 
     @Override
@@ -60,14 +63,10 @@ public class Group {
                 "id=" + id +
                 ", title='" + title + "}";
     }
-    public void printContent() {
-        System.out.println("Items in group "+ getTitle()+": "+items);
-        System.out.println("Subgroups in group "+getTitle()+": "+ groups);
-        if(groups.size()>0) {
-            for(Group group: groups) {
-                group.printContent();
-            }
-        }
+    public static void printContent() {
+for(Group group: groupList) {
+    System.out.println("Id: "+group.id+", title :"+group.title+", ParentId: "+group.parentId+", Subgroups: "+group.groups+", Intems: "+group.items);
+}
 
     }
 }

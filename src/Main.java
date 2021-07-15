@@ -29,53 +29,64 @@ public class Main {
 
         Group choosed = null;
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
-            System.out.println("Here available groups: " + availableGroups);
-            System.out.println("Please enter the ID of the group you want to choose");
-            String command = bf.readLine();
+        boolean outerCicle = true;
+        boolean innerCicle2 = true;
+        boolean innerCicle3 = true;
+
+        System.out.println("Here available groups: \n" + availableGroups + "\n");
+        System.out.println("Please enter the ID of the group you want to choose");
+        String command = bf.readLine();
+        while (outerCicle) {
             if (command.equals("exit")) {
                 System.out.println("You have not choosed a group: Program is closing now...");
                 break;
             } else {
+                try {
+                    int id = Integer.parseInt(command);
+                    choosed = availableGroups.get(id - 1);
+                    Group.groupList.add(choosed);
+                    while (innerCicle2) {
+                        System.out.println("Please Enter the id of parent group or type continue to choose items");
+                        command = bf.readLine();
+                        if (command.equals("exit")) {
+                            throw new Exception("Programm is closing...");
 
-                int id = Integer.parseInt(command);
-                choosed = availableGroups.get(id - 1);
-
-                System.out.println("Please Enter the id of parent group or type Enter to choose items");
-                command = bf.readLine();
-
-                while (true) {
-
-                    int parentId = Integer.parseInt(command);
-                    Group parentGroup = availableGroups.get(parentId - 1);
-                    parentGroup.addGroups(choosed);
-                    choosed.setParent(parentGroup);
-                    choosed = parentGroup;
-                    command = bf.readLine();
-                    if (command.equals("Enter")) break;
-
-                    if (command.equals("Continue")) {
-                        System.out.println("Here the available items to choose: " + availableItems);
-                        System.out.println("please enter the ID of item");
-                        String itemAddCommant = bf.readLine();
-                        while (!itemAddCommant.equals("Exit")) {
-                            int itemId = Integer.parseInt(itemAddCommant);
-                            Item choosedItem = availableItems.get(itemId - 1);
-                            parentGroup.addItem(choosedItem);
-                            System.out.println("Item added to group");
-                            itemAddCommant = bf.readLine();
                         }
+                        if (command.equals("continue")) {
+                            System.out.println("Available items:" + availableItems);
+                            while (innerCicle3) {
+                                try {
+                                    System.out.println("Please inter ID of item");
+                                    command = bf.readLine();
+                                    if (command.equals("exit")) {
+                                        throw new Exception("Programm is closing now...");
+                                    }
+                                    int itemId = Integer.parseInt(command);
+                                    Item item = availableItems.get(itemId - 1);
+                                    choosed.addItem(item);
+                                } catch (Exception e) {
+                                    innerCicle3 = false;
+                                    innerCicle2 = false;
 
-                        break;
+                                }
+                            }
 
+                        }
+                        int parentId = Integer.parseInt(command);
+                        Group parentGroup = availableGroups.get(parentId - 1);
+                        parentGroup.addGroups(choosed);
+                        choosed.setParent(parentGroup.getId());
+                        choosed = parentGroup;
+                        Group.groupList.add(0, parentGroup);
+                        // command = bf.readLine();
                     }
-
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    outerCicle = false;
+                    innerCicle2 = false;
                 }
-                choosed.printContent();
-                break;
-
             }
-
+            if (choosed != null) Group.printContent();
 
         }
     }
