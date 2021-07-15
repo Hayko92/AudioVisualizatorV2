@@ -34,46 +34,45 @@ public class Main {
             System.out.println("Please enter the ID of the group you want to choose");
             String command = bf.readLine();
             if (command.equals("exit")) {
-                if (choosed != null) choosed.printContent();
-                else System.out.println("You have not choosed a group: Program is closing now...");
+                System.out.println("You have not choosed a group: Program is closing now...");
                 break;
             } else {
-                try {
-                    int id = Integer.parseInt(command);
-                    choosed = availableGroups.get(id - 1);
 
-                    System.out.println("Please Enter the id of parent group or type Enter to choose items");
+                int id = Integer.parseInt(command);
+                choosed = availableGroups.get(id - 1);
+
+                System.out.println("Please Enter the id of parent group or type Enter to choose items");
+                command = bf.readLine();
+
+                while (true) {
+
+                    int parentId = Integer.parseInt(command);
+                    Group parentGroup = availableGroups.get(parentId - 1);
+                    parentGroup.addGroups(choosed);
+                    choosed.setParent(parentGroup);
+                    choosed = parentGroup;
                     command = bf.readLine();
-                    while (!command.equals("Enter")) {
+                    if (command.equals("Enter")) break;
 
-                        int parentId = Integer.parseInt(command);
-                        Group parentGroup = availableGroups.get(parentId - 1);
-                        parentGroup.addGroups(choosed);
-                        choosed.setParent(parentGroup);
-                        choosed = parentGroup;
-                        command = bf.readLine();
-                        if (command.equals("continue")) {
-                            System.out.println("Here the available items to choose: " + availableItems);
-                            System.out.println("please enter the id of item");
-                            String itemAddCommant = bf.readLine();
-                            while (!itemAddCommant.equals("exit")) {
-                                int itemId = Integer.parseInt(itemAddCommant);
-                                Item choosedItem = availableItems.get(itemId - 1);
-                                choosed.addItem(choosedItem);
-                                System.out.println("Item added to group");
-                                itemAddCommant = bf.readLine();
-                            }
-                            parentGroup.printContent();
-                            break;
-
+                    if (command.equals("Continue")) {
+                        System.out.println("Here the available items to choose: " + availableItems);
+                        System.out.println("please enter the ID of item");
+                        String itemAddCommant = bf.readLine();
+                        while (!itemAddCommant.equals("Exit")) {
+                            int itemId = Integer.parseInt(itemAddCommant);
+                            Item choosedItem = availableItems.get(itemId - 1);
+                            parentGroup.addItem(choosedItem);
+                            System.out.println("Item added to group");
+                            itemAddCommant = bf.readLine();
                         }
-                        // break;
+
+                        break;
+
                     }
 
-                } catch (Exception e) {
-                    System.out.println("Wrong Command");
-
                 }
+                choosed.printContent();
+                break;
 
             }
 

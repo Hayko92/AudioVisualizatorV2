@@ -43,4 +43,14 @@ public class Item {
     public void setParrent(Group parrent) {
         this.parrent = parrent;
     }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", currency='" + currency + '\'' +
+                '}';
+    }
 }
